@@ -67,8 +67,8 @@ void repulse(void)
 
 			line_segment_3 ls_;
 
-			ls_.start = ls.start + (ls.start - ls.end).normalize() * 10.0f;
-			ls_.end = ls.start;// end;// +(ls.end - ls.start).normalize() * 10.0f;
+			ls_.start = ls.start;
+			ls_.end = ls.start + (ls.start - ls.end).normalize() * 100.0f;// end;// +(ls.end - ls.start).normalize() * 10.0f;
 
 			threeD_line_segments.push_back(ls_);
 		}
@@ -79,16 +79,23 @@ void repulse(void)
 
 	for (size_t i = 0; i < threeD_line_segments.size(); i++)
 	{
-		double mu1 = 0, mu2 = 0;
+		const vector_3 dir = (threeD_line_segments[i].end - threeD_line_segments[i].start).normalize();
+		const vector_3 sphere_location(5, 0, 0);
+		const float sphere_radius = 1;
 
-		vector_3 dir = threeD_line_segments[i].start - threeD_line_segments[i].end;
-		dir.normalize();
+		if (dir.dot(sphere_location) > 0)
+		{
+			double mu1 = 0, mu2 = 0;
 
-		vector_3 sphere_location(5, 0, 0);
+			if (RaySphere(threeD_line_segments[i].start, threeD_line_segments[i].end, sphere_location, sphere_radius, &mu1, &mu2))
+			{ 
+				line_segment_3 ls_;
+				ls_.start = threeD_line_segments[i].start;
+				ls_.end = threeD_line_segments[i].start + threeD_line_segments[i].end*mu1;
 
-		if(dir.dot(sphere_location) > 0)
-			if(RaySphere(threeD_line_segments[i].start, threeD_line_segments[i].end, sphere_location, 1.0f, &mu1, &mu2))
-				threeD_line_segments_intersected.push_back(threeD_line_segments[i]);
+				threeD_line_segments_intersected.push_back(ls_);
+			}
+		}
 	}
 
 
