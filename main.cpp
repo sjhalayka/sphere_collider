@@ -86,9 +86,9 @@ void repulse(void)
 
 		vector_3 sphere_location(5, 0, 0);
 
-			if(dir.dot(sphere_location) > 1)
-		if(RaySphere(threeD_line_segments[i].start, threeD_line_segments[i].end, sphere_location, 1.0, &mu1, &mu2))
-			threeD_line_segments_intersected.push_back(threeD_line_segments[i]);
+		if(dir.dot(sphere_location) > 0)
+			if(RaySphere(threeD_line_segments[i].start, threeD_line_segments[i].end, sphere_location, 1.0, &mu1, &mu2))
+				threeD_line_segments_intersected.push_back(threeD_line_segments[i]);
 	}
 
 
