@@ -81,13 +81,13 @@ void repulse(void)
 	{
 		double mu1 = 0, mu2 = 0;
 
-		vector_3 dir = threeD_line_segments[i].end - threeD_line_segments[i].start;
+		vector_3 dir = threeD_line_segments[i].start - threeD_line_segments[i].end;
 		dir.normalize();
 
 		vector_3 sphere_location(5, 0, 0);
 
 		if(dir.dot(sphere_location) > 0)
-			if(RaySphere(threeD_line_segments[i].start, threeD_line_segments[i].end, sphere_location, 1.0, &mu1, &mu2))
+			if(RaySphere(threeD_line_segments[i].start, threeD_line_segments[i].end, sphere_location, 1.0f, &mu1, &mu2))
 				threeD_line_segments_intersected.push_back(threeD_line_segments[i]);
 	}
 
@@ -289,7 +289,7 @@ void draw_objects(void)
 	//	glVertex3f(threeD_line_segments[i].end.x, threeD_line_segments[i].end.y, threeD_line_segments[i].end.z);
 	//}
 
-	glColor4f(0, 1, 0, 0.25f);
+	glColor4f(0, 0, 1, 0.25f);
 
 	for (size_t i = 0; i < threeD_line_segments_intersected.size(); i++)
 	{
@@ -301,7 +301,12 @@ void draw_objects(void)
 
 	glDisable(GL_BLEND);
 
-    
+	glPushMatrix();
+	glTranslatef(5.0, 0.0, 0.0);
+	glutSolidSphere(1.0, 50, 50);
+
+	glPopMatrix();
+
 	// If we do draw the axis at all, make sure not to draw its outline.
 	if(true == draw_axis)
 	{

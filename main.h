@@ -55,7 +55,7 @@ void render_string(int x, const int y, void *font, const string &text);
 void draw_objects(void);
 
 
-size_t n = 250;// static_cast<size_t>(ceil(mass * mass));
+size_t n = 100;// static_cast<size_t>(ceil(mass * mass));
 float r = 1;// mass;
 vector<vector_3> threeD_oscillators;
 vector<vector_3> twoD_oscillators;
