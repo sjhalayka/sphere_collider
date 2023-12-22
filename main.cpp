@@ -98,6 +98,8 @@ void repulse(void)
 		}
 	}
 
+	cout << static_cast<float>(threeD_line_segments_intersected.size()) / static_cast<float>(threeD_line_segments.size()) << endl;
+
 
 
 }
