@@ -1,6 +1,7 @@
 #include "main.h"
 
-void repulse(void)
+void repulse(const vector_3 sphere_location,
+const float sphere_radius)
 {
 	for (int g = 0; g < 1000; g++)
 	{
@@ -26,62 +27,39 @@ void repulse(void)
 		}
 	}
 
-	for (int g = 0; g < 100; g++)
+
+
+	if (1)//true == redo_line_segments)
 	{
+		threeD_line_segments.clear();
+
 		for (size_t i = 0; i < n; i++)
 		{
+			line_segment_3 ls;
+			ls.start = threeD_oscillators[i];
+
 			for (size_t j = 0; j < n; j++)
 			{
 				if (i == j)
 					continue;
 
-				vector_3 accel(0, 0, 0);
+				ls.end = threeD_oscillators[j];
 
-				vector_3 grav_dir = twoD_oscillators[i] - twoD_oscillators[j];
-				const float d = static_cast<float>(grav_dir.length());
+				line_segment_3 ls_;
 
-				accel = grav_dir / (d * d);
+				ls_.start = ls.start;
+				ls_.end = ls.start + (ls.start - ls.end).normalize() * 100.0f;// end;// +(ls.end - ls.start).normalize() * 10.0f;
 
-				twoD_oscillators[i] += accel * 0.0001f;
+				threeD_line_segments.push_back(ls_);
 			}
-
-			twoD_oscillators[i].y = 0;
-			twoD_oscillators[i].normalize();
-			twoD_oscillators[i] *= r;
 		}
 	}
-
-	threeD_line_segments.clear();
-
-	for (size_t i = 0; i < n; i++)
-	{
-		line_segment_3 ls;
-		ls.start = threeD_oscillators[i];
-
-		for (size_t j = 0; j < n; j++)
-		{
-			if (i == j)
-				continue;
-
-			ls.end = threeD_oscillators[j];
-
-			line_segment_3 ls_;
-
-			ls_.start = ls.start;
-			ls_.end = ls.start + (ls.start - ls.end).normalize() * 100.0f;// end;// +(ls.end - ls.start).normalize() * 10.0f;
-
-			threeD_line_segments.push_back(ls_);
-		}
-	}
-
 
 	threeD_line_segments_intersected.clear();
 
 	for (size_t i = 0; i < threeD_line_segments.size(); i++)
 	{
 		const vector_3 dir = (threeD_line_segments[i].end - threeD_line_segments[i].start).normalize();
-		const vector_3 sphere_location(5, 0, 0);
-		const float sphere_radius = 1;
 
 		if (dir.dot(sphere_location) > 0)
 		{
@@ -98,10 +76,25 @@ void repulse(void)
 		}
 	}
 
-	cout << static_cast<float>(threeD_line_segments_intersected.size()) / static_cast<float>(threeD_line_segments.size()) << endl;
+	cout << static_cast<float>(threeD_line_segments_intersected.size()) / static_cast<float>(threeD_line_segments.size()) << ", " << endl;
 
 
 
+}
+
+
+
+
+
+
+vector_3 RandomUnitVector(void)
+{
+	float z = static_cast<float>((rand() % 256) + 1) / 256.0f * 2.0f - 1.0f;
+	float a = static_cast<float>((rand() % 256) + 1) / 256.0f * 2 * pi;
+	float r = sqrt(1.0f - z * z);
+	float x = r * cos(a);
+	float y = r * sin(a);
+	return vector_3(x, y, z).normalize();
 }
 
 int main(int argc, char **argv)
@@ -114,9 +107,7 @@ int main(int argc, char **argv)
 	{
 		vector_3 rv;
 
-		rv.x = static_cast<float>((rand() % 256) + 1) / 256.0f;
-		rv.y = static_cast<float>((rand() % 256) + 1) / 256.0f;
-		rv.z = static_cast<float>((rand() % 256) + 1) / 256.0f;
+		rv = RandomUnitVector();
 
 		rv.normalize();
 		rv *= r;
@@ -156,7 +147,11 @@ int main(int argc, char **argv)
 	oneD_oscillators.push_back(vector_3(r, 0, 0));
 	oneD_oscillators.push_back(vector_3(-r, 0, 0));
 
-	repulse();
+
+	repulse(vector_3(5.0f, 0, 0), 1.0f);
+
+	//for(float dist = 2.0; dist <= 100.0f; dist++)
+	//repulse(vector_3(dist, 0, 0), 1.0f, false);
 
 
 
@@ -292,13 +287,19 @@ void draw_objects(void)
 
 	glBegin(GL_LINES);
 
-	//for (size_t i = 0; i < threeD_line_segments.size(); i++)
-	//{
-	//	glVertex3f(threeD_line_segments[i].start.x, threeD_line_segments[i].start.y, threeD_line_segments[i].start.z);
-	//	glVertex3f(threeD_line_segments[i].end.x, threeD_line_segments[i].end.y, threeD_line_segments[i].end.z);
-	//}
+	glColor4f(1, 0.5, 0, 0.05f);
 
-	glColor4f(0, 0, 1, 0.25f);
+	for (size_t i = 0; i < threeD_line_segments.size(); i++)
+	{
+		glVertex3f(threeD_line_segments[i].start.x, threeD_line_segments[i].start.y, threeD_line_segments[i].start.z);
+		glVertex3f(threeD_line_segments[i].end.x, threeD_line_segments[i].end.y, threeD_line_segments[i].end.z);
+	}
+
+	glEnd();
+
+	glBegin(GL_LINES);
+
+	glColor4f(0, 0, 1, 1.0f);
 
 	for (size_t i = 0; i < threeD_line_segments_intersected.size(); i++)
 	{
@@ -310,11 +311,10 @@ void draw_objects(void)
 
 	glDisable(GL_BLEND);
 
-	glPushMatrix();
-	glTranslatef(5.0, 0.0, 0.0);
-	glutSolidSphere(1.0, 50, 50);
-
-	glPopMatrix();
+	//glPushMatrix();
+	//glTranslatef(5.0, 0.0, 0.0);
+	//glutSolidSphere(1.0, 50, 50);
+	//glPopMatrix();
 
 	// If we do draw the axis at all, make sure not to draw its outline.
 	if(true == draw_axis)
@@ -454,7 +454,7 @@ void keyboard_func(unsigned char key, int x, int y)
 
 	case ' ':
 		{
-		repulse();
+		//repulse();
 
 			break;
 		}
