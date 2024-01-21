@@ -62,27 +62,35 @@ const double dimension)
 		vectors.push_back(v);
 	}
 
-	double perpendicularity = 0;
+	double parallelity = 0;
 	size_t count = 0;
 
-	for (size_t i = 0; i < vectors.size(); i++)
+	if (vectors.size() == 1)
 	{
-		for (size_t j = 0; j < vectors.size(); j++)
+		parallelity = 0;
+		count = 1;
+	}
+	else
+	{
+		for (size_t i = 0; i < vectors.size(); i++)
 		{
-			double d = vectors[i].dot(vectors[j]);
+			for (size_t j = 0; j < vectors.size(); j++)
+			{
+				const double d = vectors[i].dot(vectors[j]);
 
-			perpendicularity += d;
-			count++;
+				parallelity += d;
+				count++;
+			}
 		}
+
+		parallelity /= count;
 	}
 
-	perpendicularity /= count;
-
-	perpendicularity = abs(perpendicularity);
+	parallelity = abs(parallelity);
 
 
 
-	cout << perpendicularity << endl;
+	cout << parallelity << endl;
 }
 
 
@@ -104,7 +112,7 @@ int main(int argc, char **argv)
 {
 	//cout << setprecision(20) << endl;
 
-	const double dimension = 2.95;
+	const double dimension = 2.5;
 
 	for (size_t i = 0; i < n; i++)
 	{
@@ -163,9 +171,14 @@ int main(int argc, char **argv)
 		double theta = atan2(sqrt(x * x + y * y), z);
 		double phi = atan2(y, x);
 
-		x = rho * sin(theta) * cos(phi);
-		y = rho * sin(theta) * sin(phi);
-		z = rho * cos(theta);
+		double disk_like = 3 - dimension;
+		double sphere_like = 1 - disk_like;
+
+		theta = theta * sphere_like;
+
+		threeD_oscillators[i].x = rho * sin(theta) * cos(phi);
+		threeD_oscillators[i].y = rho * sin(theta) * sin(phi);
+		threeD_oscillators[i].z = rho * cos(theta);
 
 		//cout << threeD_oscillators[i].x << ' ' << threeD_oscillators[i].y << ' ' << threeD_oscillators[i].z << endl;
 		//cout << x << ' ' << y << ' ' << z << endl << endl;
