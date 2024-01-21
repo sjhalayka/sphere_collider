@@ -1,7 +1,8 @@
 #include "main.h"
 
 void get_line_segments(const vector_3 sphere_location,
-const float sphere_radius)
+const double sphere_radius,
+const double dimension)
 {
 	if (1)//true == redo_line_segments)
 	{
@@ -43,7 +44,7 @@ const float sphere_radius)
 			{ 
 				line_segment_3 ls_;
 				ls_.start = threeD_line_segments[i].start;
-				ls_.end = threeD_line_segments[i].start + threeD_line_segments[i].end*mu2;//mu1
+				ls_.end = threeD_line_segments[i].start + threeD_line_segments[i].end*mu1;
 
 				threeD_line_segments_intersected.push_back(ls_);
 			}
@@ -68,8 +69,8 @@ const float sphere_radius)
 	{
 		for (size_t j = 0; j < vectors.size(); j++)
 		{
-			if (i == j)
-				continue;
+			//if (i == j)
+			//	continue;
 
 			double d = vectors[i].dot(vectors[j]);
 
@@ -79,6 +80,9 @@ const float sphere_radius)
 	}
 
 	perpendicularity /= count;
+
+	perpendicularity = abs(perpendicularity);
+
 
 
 	cout << perpendicularity << endl;
@@ -103,7 +107,7 @@ int main(int argc, char **argv)
 {
 	//cout << setprecision(20) << endl;
 
-
+	const double dimension = 2.95;
 
 	for (size_t i = 0; i < n; i++)
 	{
@@ -150,21 +154,19 @@ int main(int argc, char **argv)
 		}
 	}
 
+	// move along arc to disk formation
 
-	get_line_segments(vector_3(5.0f, 0, 0), 1.0f);
+
+
+
+
+
+
+
+	get_line_segments(vector_3(5.0, 0, 0), 1.0, dimension);
 
 	//for(float dist = 2.0; dist <= 100.0f; dist++)
-	//get_line_segments(vector_3(dist, 0, 0), 1.0f, false);
-
-
-
-
-
-
-
-
-
-
+	//get_line_segments(vector_3(dist, 0, 0), 1.0f, 3.0f);
 
 
 	glutInit(&argc, argv);
@@ -319,10 +321,10 @@ void draw_objects(void)
 
 	glPushMatrix();
 
-	glColor4f(0, 0.5, 1.0, 1.0f);
-	glTranslatef(5.0, 0.0, 0.0);
-	glutSolidSphere(1.0, 50, 50);
-	glPopMatrix();
+	//glColor4f(0, 0.5, 1.0, 1.0f);
+	//glTranslatef(5.0, 0.0, 0.0);
+	//glutSolidSphere(1.0, 50, 50);
+	//glPopMatrix();
 
 	// If we do draw the axis at all, make sure not to draw its outline.
 	if(true == draw_axis)
