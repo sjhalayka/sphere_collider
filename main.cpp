@@ -1,34 +1,8 @@
 #include "main.h"
 
-void repulse(const vector_3 sphere_location,
+void get_line_segments(const vector_3 sphere_location,
 const float sphere_radius)
 {
-	for (int g = 0; g < 1000; g++)
-	{
-		for (size_t i = 0; i < n; i++)
-		{
-			for (size_t j = 0; j < n; j++)
-			{
-				if (i == j)
-					continue;
-
-				vector_3 accel(0, 0, 0);
-
-				vector_3 grav_dir = threeD_oscillators[i] - threeD_oscillators[j];
-				const float d = static_cast<float>(grav_dir.length());
-
-				accel = grav_dir / (d * d);
-
-				threeD_oscillators[i] += accel * 0.0001f;
-			}
-
-			threeD_oscillators[i].normalize();
-			threeD_oscillators[i] *= r;
-		}
-	}
-
-
-
 	if (1)//true == redo_line_segments)
 	{
 		threeD_line_segments.clear();
@@ -48,7 +22,7 @@ const float sphere_radius)
 				line_segment_3 ls_;
 
 				ls_.start = ls.start;
-				ls_.end = ls.start + (ls.start - ls.end).normalize() * 100.0f;// end;// +(ls.end - ls.start).normalize() * 10.0f;
+				ls_.end = ls.start + (ls.start - ls.end).normalize() * 1e10f;// end;// +(ls.end - ls.start).normalize() * 10.0f;
 
 				threeD_line_segments.push_back(ls_);
 			}
@@ -69,17 +43,45 @@ const float sphere_radius)
 			{ 
 				line_segment_3 ls_;
 				ls_.start = threeD_line_segments[i].start;
-				ls_.end = threeD_line_segments[i].start + threeD_line_segments[i].end*mu1;
+				ls_.end = threeD_line_segments[i].start + threeD_line_segments[i].end*mu2;//mu1
 
 				threeD_line_segments_intersected.push_back(ls_);
 			}
 		}
 	}
 
-	cout << static_cast<float>(threeD_line_segments_intersected.size()) / static_cast<float>(threeD_line_segments.size()) << ", " << endl;
+//	cout << static_cast<float>(threeD_line_segments_intersected.size()) / static_cast<float>(threeD_line_segments.size()) << ", " << endl;
+
+	vector<vector_3> vectors;
+
+	for (size_t i = 0; i < threeD_line_segments_intersected.size(); i++)
+	{
+		vector_3 v = (threeD_line_segments_intersected[i].end - threeD_line_segments_intersected[i].start);
+		v.normalize();
+		vectors.push_back(v);
+	}
+
+	double perpendicularity = 0;
+	size_t count = 0;
+
+	for (size_t i = 0; i < vectors.size(); i++)
+	{
+		for (size_t j = 0; j < vectors.size(); j++)
+		{
+			if (i == j)
+				continue;
+
+			double d = vectors[i].dot(vectors[j]);
+
+			perpendicularity += d;
+			count++;
+		}
+	}
+
+	perpendicularity /= count;
 
 
-
+	cout << perpendicularity << endl;
 }
 
 
@@ -124,10 +126,35 @@ int main(int argc, char **argv)
 		threeD_oscillators.push_back(rv);
 	}
 
-	repulse(vector_3(5.0f, 0, 0), 1.0f);
+	for (int g = 0; g < 100; g++)
+	{
+		for (size_t i = 0; i < n; i++)
+		{
+			for (size_t j = 0; j < n; j++)
+			{
+				if (i == j)
+					continue;
+
+				vector_3 accel(0, 0, 0);
+
+				vector_3 grav_dir = threeD_oscillators[i] - threeD_oscillators[j];
+				const float d = static_cast<float>(grav_dir.length());
+
+				accel = grav_dir / (d * d);
+
+				threeD_oscillators[i] += accel * 0.0001f;
+			}
+
+			threeD_oscillators[i].normalize();
+			threeD_oscillators[i] *= r;
+		}
+	}
+
+
+	get_line_segments(vector_3(5.0f, 0, 0), 1.0f);
 
 	//for(float dist = 2.0; dist <= 100.0f; dist++)
-	//repulse(vector_3(dist, 0, 0), 1.0f, false);
+	//get_line_segments(vector_3(dist, 0, 0), 1.0f, false);
 
 
 
@@ -278,7 +305,7 @@ void draw_objects(void)
 
 	glBegin(GL_LINES);
 
-	glColor4f(0, 0, 1, 1.0f);
+	glColor4f(0, 0, 1, 0.1f);
 
 	for (size_t i = 0; i < threeD_line_segments_intersected.size(); i++)
 	{
@@ -290,10 +317,12 @@ void draw_objects(void)
 
 	glDisable(GL_BLEND);
 
-	//glPushMatrix();
-	//glTranslatef(5.0, 0.0, 0.0);
-	//glutSolidSphere(1.0, 50, 50);
-	//glPopMatrix();
+	glPushMatrix();
+
+	glColor4f(0, 0.5, 1.0, 1.0f);
+	glTranslatef(5.0, 0.0, 0.0);
+	glutSolidSphere(1.0, 50, 50);
+	glPopMatrix();
 
 	// If we do draw the axis at all, make sure not to draw its outline.
 	if(true == draw_axis)

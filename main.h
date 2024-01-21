@@ -55,10 +55,12 @@ void render_string(int x, const int y, void *font, const string &text);
 void draw_objects(void);
 
 
-size_t n = 100;// static_cast<size_t>(ceil(mass * mass));
+size_t n = 1000;// static_cast<size_t>(ceil(mass * mass));
 float r = 1;// mass;
 vector<vector_3> threeD_oscillators;
 
+
+const double metres_per_10_kiloparsecs = 3.08567758128e20;
 const float pi = 4.0f * atanf(1.0f);
 
 vector<line_segment_3> threeD_line_segments;
