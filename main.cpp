@@ -108,6 +108,26 @@ vector_3 RandomUnitVector(void)
 	return vector_3(x, y, z).normalize();
 }
 
+vector_3 slerp( vector_3 s0, vector_3 s1, double t)
+{
+	vector_3 s0_norm = s0;
+	s0_norm.normalize();
+
+	vector_3 s1_norm = s1;
+	s1_norm.normalize();
+
+	double cos_angle = s0_norm.dot(s1_norm);
+	double angle = acos(cos_angle);
+
+	double p0_factor = sin((1 - t)*angle)/sin(angle);
+	double p1_factor = sin(t * angle) / sin(angle);
+
+	vector_3 s_out = s0 * p0_factor + s1 * p1_factor;
+
+	return s_out;
+}
+
+
 int main(int argc, char **argv)
 {
 	//cout << setprecision(20) << endl;
@@ -160,34 +180,24 @@ int main(int argc, char **argv)
 	}
 
 	// move along arc to disk formation
-
 	for (size_t i = 0; i < threeD_oscillators.size(); i++)
 	{
 		double x = threeD_oscillators[i].x;
 		double y = threeD_oscillators[i].y;
 		double z = threeD_oscillators[i].z;
 
-		double rho = sqrt(x * x + y * y + z * z);
-		double theta = atan2(sqrt(x * x + y * y), z);
-		double phi = atan2(y, x);
+		vector_3 ring;
 
-		double disk_like = 3 - dimension;
-		double sphere_like = 1 - disk_like;
+		ring.x = x;
+		ring.y = 0;
+		ring.z = z;
 
-		theta = theta * sphere_like;
+		ring.normalize();
 
-		threeD_oscillators[i].x = rho * sin(theta) * cos(phi);
-		threeD_oscillators[i].y = rho * sin(theta) * sin(phi);
-		threeD_oscillators[i].z = rho * cos(theta);
+		double disk_like = 3 - dimension; // where dimension is between 3.0 and 2.0
 
-		//cout << threeD_oscillators[i].x << ' ' << threeD_oscillators[i].y << ' ' << threeD_oscillators[i].z << endl;
-		//cout << x << ' ' << y << ' ' << z << endl << endl;
-
-
+		threeD_oscillators[i] = slerp(threeD_oscillators[i], ring, disk_like);
 	}
-
-
-	//threeD_oscillators[i]
 
 
 
@@ -321,20 +331,20 @@ void draw_objects(void)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-	glBegin(GL_LINES);
+	//glBegin(GL_LINES);
 
-	glColor4f(1, 0.5, 0, 0.05f);
+	//glColor4f(1, 0.5, 0, 0.05f);
 
-	for (size_t i = 0; i < threeD_line_segments.size(); i++)
-	{
-		if(threeD_line_segments[i].start.z > 0 || threeD_line_segments[i].end.z > 0)
-			continue;
+	//for (size_t i = 0; i < threeD_line_segments.size(); i++)
+	//{
+	//	if(threeD_line_segments[i].start.z > 0 || threeD_line_segments[i].end.z > 0)
+	//		continue;
 
-		glVertex3f(threeD_line_segments[i].start.x, threeD_line_segments[i].start.y, threeD_line_segments[i].start.z);
-		glVertex3f(threeD_line_segments[i].end.x, threeD_line_segments[i].end.y, threeD_line_segments[i].end.z);
-	}
+	//	glVertex3f(threeD_line_segments[i].start.x, threeD_line_segments[i].start.y, threeD_line_segments[i].start.z);
+	//	glVertex3f(threeD_line_segments[i].end.x, threeD_line_segments[i].end.y, threeD_line_segments[i].end.z);
+	//}
 
-	glEnd();
+	//glEnd();
 
 	glBegin(GL_LINES);
 
