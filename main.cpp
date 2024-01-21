@@ -153,6 +153,27 @@ int main(int argc, char **argv)
 
 	// move along arc to disk formation
 
+	for (size_t i = 0; i < threeD_oscillators.size(); i++)
+	{
+		double x = threeD_oscillators[i].x;
+		double y = threeD_oscillators[i].y;
+		double z = threeD_oscillators[i].z;
+
+		double rho = sqrt(x * x + y * y + z * z);
+		double theta = atan2(sqrt(x * x + y * y), z);
+		double phi = atan2(y, x);
+
+		x = rho * sin(theta) * cos(phi);
+		y = rho * sin(theta) * sin(phi);
+		z = rho * cos(theta);
+
+		//cout << threeD_oscillators[i].x << ' ' << threeD_oscillators[i].y << ' ' << threeD_oscillators[i].z << endl;
+		//cout << x << ' ' << y << ' ' << z << endl << endl;
+
+
+	}
+
+
 	//threeD_oscillators[i]
 
 
