@@ -69,9 +69,6 @@ const double dimension)
 	{
 		for (size_t j = 0; j < vectors.size(); j++)
 		{
-			//if (i == j)
-			//	continue;
-
 			double d = vectors[i].dot(vectors[j]);
 
 			perpendicularity += d;
@@ -156,7 +153,7 @@ int main(int argc, char **argv)
 
 	// move along arc to disk formation
 
-
+	//threeD_oscillators[i]
 
 
 
