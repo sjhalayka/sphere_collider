@@ -58,8 +58,6 @@ void draw_objects(void);
 size_t n = 100;// static_cast<size_t>(ceil(mass * mass));
 float r = 1;// mass;
 vector<vector_3> threeD_oscillators;
-vector<vector_3> twoD_oscillators;
-vector<vector_3> oneD_oscillators;
 
 const float pi = 4.0f * atanf(1.0f);
 

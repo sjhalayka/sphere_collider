@@ -124,30 +124,6 @@ int main(int argc, char **argv)
 		threeD_oscillators.push_back(rv);
 	}
 
-	for (size_t i = 0; i < n; i++)
-	{
-		vector_3 rv;
-
-		rv.x = static_cast<float>((rand() % 256) + 1) / 256.0f;
-		rv.y = 0;
-		rv.z = static_cast<float>((rand() % 256) + 1) / 256.0f;
-
-		rv.normalize();
-		rv *= r;
-
-		if (rand() % 2)
-			rv.x = -rv.x;
-
-		if (rand() % 2)
-			rv.z = -rv.z;
-
-		twoD_oscillators.push_back(rv);
-	}
-
-	oneD_oscillators.push_back(vector_3(r, 0, 0));
-	oneD_oscillators.push_back(vector_3(-r, 0, 0));
-
-
 	repulse(vector_3(5.0f, 0, 0), 1.0f);
 
 	//for(float dist = 2.0; dist <= 100.0f; dist++)
@@ -266,17 +242,17 @@ void draw_objects(void)
 		glVertex3f(threeD_oscillators[i].x, threeD_oscillators[i].y, threeD_oscillators[i].z);
 	}
 
-	glColor3f(1, 0, 0);
+	//glColor3f(1, 0, 0);
 
-	for (size_t i = 0; i < n; i++)
-	{
-		glVertex3f(twoD_oscillators[i].x, twoD_oscillators[i].y, twoD_oscillators[i].z);
-	}
+	//for (size_t i = 0; i < n; i++)
+	//{
+	//	glVertex3f(twoD_oscillators[i].x, twoD_oscillators[i].y, twoD_oscillators[i].z);
+	//}
 
-	glColor3f(0, 1, 0);
+	//glColor3f(0, 1, 0);
 
-	glVertex3f(oneD_oscillators[0].x, oneD_oscillators[0].y, oneD_oscillators[0].z);
-	glVertex3f(oneD_oscillators[1].x, oneD_oscillators[1].y, oneD_oscillators[1].z);
+	//glVertex3f(oneD_oscillators[0].x, oneD_oscillators[0].y, oneD_oscillators[0].z);
+	//glVertex3f(oneD_oscillators[1].x, oneD_oscillators[1].y, oneD_oscillators[1].z);
 
 	glEnd();
 
@@ -291,6 +267,9 @@ void draw_objects(void)
 
 	for (size_t i = 0; i < threeD_line_segments.size(); i++)
 	{
+		if(threeD_line_segments[i].start.z > 0 || threeD_line_segments[i].end.z > 0)
+			continue;
+
 		glVertex3f(threeD_line_segments[i].start.x, threeD_line_segments[i].start.y, threeD_line_segments[i].start.z);
 		glVertex3f(threeD_line_segments[i].end.x, threeD_line_segments[i].end.y, threeD_line_segments[i].end.z);
 	}
