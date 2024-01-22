@@ -294,7 +294,7 @@ void draw_objects(void)
     
 	glPushMatrix();
   
-
+	glScaled(1.0 / receiver_radius, 1.0 / receiver_radius, 1.0 / receiver_radius);
 	glPointSize(1.0);
 	glLineWidth(1.0f);
     
@@ -320,7 +320,7 @@ void draw_objects(void)
 
 	glBegin(GL_LINES);
 
-	glColor4f(0, 1, 0, 0.01f);
+	glColor4f(0, 1, 0, 0.1f);
 
 	for (size_t i = 0; i < threeD_line_segments.size(); i++)
 	{
@@ -335,7 +335,7 @@ void draw_objects(void)
 
 	glBegin(GL_LINES);
 
-	glColor4f(0, 0, 1, 0.1f);
+	glColor4f(0, 0, 1, 1.0f);
 
 	for (size_t i = 0; i < threeD_line_segments_intersected.size(); i++)
 	{
