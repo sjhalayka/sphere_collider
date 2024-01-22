@@ -4,6 +4,8 @@ void get_line_segments(const vector_3 sphere_location,
 const double sphere_radius,
 const double dimension)
 {
+	const double disk_like = 3 - dimension;
+
 	if (1)//true == redo_line_segments)
 	{
 		threeD_line_segments.clear();
@@ -23,7 +25,7 @@ const double dimension)
 				line_segment_3 ls_;
 
 				ls_.start = ls.start;
-				ls_.end = ls.start + (ls.start - ls.end).normalize() * 1e10f;// end;// +(ls.end - ls.start).normalize() * 10.0f;
+				ls_.end =  ls.start + (ls.start - ls.end).normalize() * 1e35f;// end;// +(ls.end - ls.start).normalize() * 10.0f;
 
 				threeD_line_segments.push_back(ls_);
 			}
@@ -65,32 +67,28 @@ const double dimension)
 	double parallelity = 0;
 	size_t count = 0;
 
-	if (vectors.size() == 1)
+	for (size_t i = 0; i < vectors.size(); i++)
 	{
-		parallelity = 0;
-		count = 1;
-	}
-	else
-	{
-		for (size_t i = 0; i < vectors.size(); i++)
+		for (size_t j = 0; j < vectors.size(); j++)
 		{
-			for (size_t j = 0; j < vectors.size(); j++)
-			{
-				const double d = vectors[i].dot(vectors[j]);
+			const double d = vectors[i].dot(vectors[j]);
 
-				parallelity += d;
-				count++;
-			}
+			parallelity += d;
+			count++;
 		}
-
-		parallelity /= count;
 	}
+
+	parallelity /= count;
 
 	parallelity = abs(parallelity);
 
-
-
 	cout << parallelity << endl;
+
+	double avg_strength = pow(c_meters, disk_like);
+
+	cout << c_meters << endl;
+	cout << avg_strength * parallelity << endl;
+
 }
 
 
@@ -108,7 +106,7 @@ vector_3 RandomUnitVector(void)
 	return vector_3(x, y, z).normalize();
 }
 
-vector_3 slerp( vector_3 s0, vector_3 s1, double t)
+vector_3 slerp(vector_3 s0, vector_3 s1, const double t)
 {
 	vector_3 s0_norm = s0;
 	s0_norm.normalize();
@@ -116,15 +114,13 @@ vector_3 slerp( vector_3 s0, vector_3 s1, double t)
 	vector_3 s1_norm = s1;
 	s1_norm.normalize();
 
-	double cos_angle = s0_norm.dot(s1_norm);
-	double angle = acos(cos_angle);
+	const double cos_angle = s0_norm.dot(s1_norm);
+	const double angle = acos(cos_angle);
 
-	double p0_factor = sin((1 - t)*angle)/sin(angle);
-	double p1_factor = sin(t * angle) / sin(angle);
+	const double p0_factor = sin((1 - t)*angle) / sin(angle);
+	const double p1_factor = sin(t * angle) / sin(angle);
 
-	vector_3 s_out = s0 * p0_factor + s1 * p1_factor;
-
-	return s_out;
+	return s0 * p0_factor + s1 * p1_factor;
 }
 
 
@@ -141,7 +137,7 @@ int main(int argc, char **argv)
 		rv = RandomUnitVector();
 
 		rv.normalize();
-		rv *= r;
+		rv *= emitter_radius;
 
 		if (rand() % 2)
 			rv.x = -rv.x;
@@ -175,7 +171,7 @@ int main(int argc, char **argv)
 			}
 
 			threeD_oscillators[i].normalize();
-			threeD_oscillators[i] *= r;
+			threeD_oscillators[i] *= emitter_radius;
 		}
 	}
 
@@ -204,7 +200,7 @@ int main(int argc, char **argv)
 
 
 
-	get_line_segments(vector_3(5.0, 0, 0), 1.0, dimension);
+	get_line_segments(vector_3(10.0, 0, 0), 1.0, dimension);
 
 	//for(float dist = 2.0; dist <= 100.0f; dist++)
 	//get_line_segments(vector_3(dist, 0, 0), 1.0f, 3.0f);
@@ -255,7 +251,7 @@ void init_opengl(const int &width, const int &height)
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
-	glClearColor(background_colour.x, background_colour.y, background_colour.z, 1);
+	glClearColor(static_cast<float>(background_colour.x), static_cast<float>(background_colour.y), static_cast<float>(background_colour.z), 1);
 	glClearDepth(1.0f);
 
 	main_camera.Set(0, 0, camera_w, camera_fov, win_x, win_y, camera_near, camera_far);
@@ -307,44 +303,34 @@ void draw_objects(void)
 
 	glColor3f(1, 1, 1);
 
-	for (size_t i = 0; i < n; i++)
+	for (size_t i = 0; i < threeD_oscillators.size(); i++)
 	{
-		glVertex3f(threeD_oscillators[i].x, threeD_oscillators[i].y, threeD_oscillators[i].z);
+		glVertex3d(threeD_oscillators[i].x, threeD_oscillators[i].y, threeD_oscillators[i].z);
 	}
 
-	//glColor3f(1, 0, 0);
-
-	//for (size_t i = 0; i < n; i++)
-	//{
-	//	glVertex3f(twoD_oscillators[i].x, twoD_oscillators[i].y, twoD_oscillators[i].z);
-	//}
-
-	//glColor3f(0, 1, 0);
-
-	//glVertex3f(oneD_oscillators[0].x, oneD_oscillators[0].y, oneD_oscillators[0].z);
-	//glVertex3f(oneD_oscillators[1].x, oneD_oscillators[1].y, oneD_oscillators[1].z);
-
 	glEnd();
+
+
 
 	glEnable(GL_ALPHA);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-	//glBegin(GL_LINES);
+	glBegin(GL_LINES);
 
-	//glColor4f(1, 0.5, 0, 0.05f);
+	glColor4f(1, 0.5, 0, 0.05f);
 
-	//for (size_t i = 0; i < threeD_line_segments.size(); i++)
-	//{
-	//	if(threeD_line_segments[i].start.z > 0 || threeD_line_segments[i].end.z > 0)
-	//		continue;
+	for (size_t i = 0; i < threeD_line_segments.size(); i++)
+	{
+		if(threeD_line_segments[i].start.z > 0 || threeD_line_segments[i].end.z > 0)
+			continue;
 
-	//	glVertex3f(threeD_line_segments[i].start.x, threeD_line_segments[i].start.y, threeD_line_segments[i].start.z);
-	//	glVertex3f(threeD_line_segments[i].end.x, threeD_line_segments[i].end.y, threeD_line_segments[i].end.z);
-	//}
+		glVertex3d(threeD_line_segments[i].start.x, threeD_line_segments[i].start.y, threeD_line_segments[i].start.z);
+		glVertex3d(threeD_line_segments[i].end.x, threeD_line_segments[i].end.y, threeD_line_segments[i].end.z);
+	}
 
-	//glEnd();
+	glEnd();
 
 	glBegin(GL_LINES);
 
@@ -352,18 +338,17 @@ void draw_objects(void)
 
 	for (size_t i = 0; i < threeD_line_segments_intersected.size(); i++)
 	{
-		glVertex3f(threeD_line_segments_intersected[i].start.x, threeD_line_segments_intersected[i].start.y, threeD_line_segments_intersected[i].start.z);
-		glVertex3f(threeD_line_segments_intersected[i].end.x, threeD_line_segments_intersected[i].end.y, threeD_line_segments_intersected[i].end.z);
+		glVertex3d(threeD_line_segments_intersected[i].start.x, threeD_line_segments_intersected[i].start.y, threeD_line_segments_intersected[i].start.z);
+		glVertex3d(threeD_line_segments_intersected[i].end.x, threeD_line_segments_intersected[i].end.y, threeD_line_segments_intersected[i].end.z);
 	}
 
 	glEnd();
 
 	glDisable(GL_BLEND);
 
-	glPushMatrix();
-
+	//glPushMatrix();
 	//glColor4f(0, 0.5, 1.0, 1.0f);
-	//glTranslatef(5.0, 0.0, 0.0);
+	//glTranslatef(emitter_pos, 0.0, 0.0);
 	//glutSolidSphere(1.0, 50, 50);
 	//glPopMatrix();
 
@@ -374,21 +359,21 @@ void draw_objects(void)
 
 		glColor3f(1, 0, 0);
 		glVertex3f(0, 0, 0);
-		glVertex3f(1, 0, 0);
+		glVertex3f(1e20f, 0, 0);
 		glColor3f(0, 1, 0);
 		glVertex3f(0, 0, 0);
-		glVertex3f(0, 1, 0);
+		glVertex3f(0, 1e20f, 0);
 		glColor3f(0, 0, 1);
 		glVertex3f(0, 0, 0);
-		glVertex3f(0, 0, 1);
+		glVertex3f(0, 0, 1e20f);
 
-		glColor3f(0.5, 0.5, 0.5);
-		glVertex3f(0, 0, 0);
-		glVertex3f(-1, 0, 0);
-		glVertex3f(0, 0, 0);
-		glVertex3f(0, -1, 0);
-		glVertex3f(0, 0, 0);
-		glVertex3f(0, 0, -1);
+		//glColor3f(0.5, 0.5, 0.5);
+		//glVertex3f(0, 0, 0);
+		//glVertex3f(-1, 0, 0);
+		//glVertex3f(0, 0, 0);
+		//glVertex3f(0, -1, 0);
+		//glVertex3f(0, 0, 0);
+		//glVertex3f(0, 0, -1);
 
 		glEnd();
 	}
@@ -420,7 +405,7 @@ void display_func(void)
 		glPushMatrix();
 		glLoadIdentity();
 
-		glColor3f(control_list_colour.x, control_list_colour.y, control_list_colour.z);
+		glColor3d(control_list_colour.x, control_list_colour.y, control_list_colour.z);
 
 		int break_size = 22;
 		int start = 20;

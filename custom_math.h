@@ -59,9 +59,9 @@ namespace custom_math
 class custom_math::vector_3
 {
 public:
-	float x, y, z;
+	double x, y, z;
 
-	vector_3(const float &src_x = 0, const float &src_y = 0, const float &src_z = 0);
+	vector_3(const double &src_x = 0, const double&src_y = 0, const double&src_z = 0);
 	bool operator==(const vector_3 &rhs);
 	bool operator!=(const vector_3 &rhs);
 	void zero(void);

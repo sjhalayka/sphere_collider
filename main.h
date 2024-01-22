@@ -55,13 +55,19 @@ void render_string(int x, const int y, void *font, const string &text);
 void draw_objects(void);
 
 
+
+
 size_t n = 1000;// static_cast<size_t>(ceil(mass * mass));
-float r = 1;// mass;
+
+float emitter_radius = 1;
+float receiver_radius = 1;// mass;
+
 vector<vector_3> threeD_oscillators;
 
 
-const double metres_per_10_kiloparsecs = 3.08567758128e20;
 const float pi = 4.0f * atanf(1.0f);
+const double c_meters = 299792458;
+
 
 vector<line_segment_3> threeD_line_segments;
 vector<line_segment_3> threeD_line_segments_intersected;
@@ -82,16 +88,16 @@ uv_camera main_camera;
 
 GLint win_id = 0;
 GLint win_x = 800, win_y = 600;
-float camera_w = 10.0f;
+double camera_w = receiver_radius * 10.0;// 3.086e25f;
 
-float camera_fov = 45.0f;
-float camera_x_transform = 0;
-float camera_y_transform = 0;
-float u_spacer = 0.01f;
-float v_spacer = 0.5f*u_spacer;
-float w_spacer = 0.1f;
-float camera_near = 1.0f;
-float camera_far = 1000.0f;
+double camera_fov = 45.0f;
+double camera_x_transform = 0;
+double camera_y_transform = 0;
+double u_spacer = 0.01f;
+double v_spacer = 0.5f*u_spacer;
+double w_spacer = 0.1f;
+double camera_near = 1.0f;
+double camera_far = camera_w * 10.0;
 
 bool lmb_down = false;
 bool mmb_down = false;

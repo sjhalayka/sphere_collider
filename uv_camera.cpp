@@ -4,10 +4,10 @@
 
 #include "uv_camera.h"
 
-const float pi = 4.0f*atan(1.0f);
-const float pi_half = 0.5f*pi;
-const float pi_2 = 2.0f*pi;
-const float epsilon = 1e-6f;
+const double pi = 4.0f*atan(1.0f);
+const double pi_half = 0.5f*pi;
+const double pi_2 = 2.0f*pi;
+const double epsilon = 1e-6f;
 
 
 
@@ -21,7 +21,7 @@ uv_camera::uv_camera(void)
 	win_x = win_y = 0;
 }
 
-void uv_camera::Set(const float u_rad, const float v_rad, const float w_metres, const float fov_deg, const int width_px, const int height_px, float src_near, float src_far)
+void uv_camera::Set(const double u_rad, const double v_rad, const double w_metres, const double fov_deg, const int width_px, const int height_px, double src_near, double src_far)
 {
 	u = u_rad;
 	v = v_rad;
@@ -29,7 +29,7 @@ void uv_camera::Set(const float u_rad, const float v_rad, const float w_metres, 
 	near_plane = src_near;
 	far_plane = src_far;
 
-	static const float lock = epsilon * 1000.0f;
+	static const double lock = epsilon * 1000.0f;
 
 	if(u < -pi_half + lock)
 		u = -pi_half + lock;
@@ -66,7 +66,7 @@ void uv_camera::Transform(void)
 
 	gluPerspective(
 		fov, 
-		static_cast<GLfloat>(win_x)/static_cast<GLfloat>(win_y), 
+		static_cast<GLdouble>(win_x)/static_cast<GLdouble>(win_y), 
 		near_plane, far_plane);
 
 	gluLookAt(
@@ -90,19 +90,19 @@ void uv_camera::Set_Large_Screenshot(size_t num_cams, size_t cam_index_x, size_t
 
 	// Image plane reference:
 	// http://www.songho.ca/opengl/gl_transform.html
-    const float deg_to_rad = (1.0f/360.0f)*2.0f*pi;
-	float aspect = static_cast<float>(win_x) / static_cast<float>(win_y);
-    float tangent = tan((fov/2.0f)*deg_to_rad);
-    float height = near_plane * tangent; // Half height of near_plane plane.
-    float width = height * aspect; // Half width of near_plane plane.
+    const double deg_to_rad = (1.0f/360.0f)*2.0f*pi;
+	double aspect = static_cast<double>(win_x) / static_cast<double>(win_y);
+    double tangent = tan((fov/2.0f)*deg_to_rad);
+    double height = near_plane * tangent; // Half height of near_plane plane.
+    double width = height * aspect; // Half width of near_plane plane.
 
-	float cam_width = 2.0f*width/num_cams;
-	float cam_height = 2.0f*height/num_cams;
+	double cam_width = 2.0f*width/num_cams;
+	double cam_height = 2.0f*height/num_cams;
 
-	float left = -width + cam_index_x*cam_width;
-	float right = -width + (cam_index_x + 1)*cam_width;
-	float bottom = -height + cam_index_y*cam_height;
-	float top = -height + (cam_index_y + 1)*cam_height;
+	double left = -width + cam_index_x*cam_width;
+	double right = -width + (cam_index_x + 1)*cam_width;
+	double bottom = -height + cam_index_y*cam_height;
+	double top = -height + (cam_index_y + 1)*cam_height;
 
 	// Instead of gluPerspective...
     glFrustum(left, right, bottom, top, near_plane, far_plane);

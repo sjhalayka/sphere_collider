@@ -2,7 +2,7 @@
 #include "custom_math.h"
 
 
-custom_math::vector_3::vector_3(const float &src_x, const float &src_y, const float &src_z)
+custom_math::vector_3::vector_3(const double &src_x, const double &src_y, const double &src_z)
 {
 	x = src_x;
 	y = src_y;
