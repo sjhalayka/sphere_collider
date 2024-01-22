@@ -59,12 +59,11 @@ void draw_objects(void);
 
 size_t n = 1000;// static_cast<size_t>(ceil(mass * mass));
 
-double receiver_radius = 3e20;// 3e10;// mass;
+double receiver_pos = 3e20;// 10 * receiver_radius;
+double receiver_radius = receiver_pos / 10.0;// 3e10;// mass;
 
 double emitter_radius = 1;// receiver_radius;
 
-
-double receiver_pos = 10*receiver_radius;
 
 vector<vector_3> threeD_oscillators;
 
