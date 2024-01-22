@@ -57,24 +57,25 @@ void draw_objects(void);
 
 
 
-size_t n = 1000;// static_cast<size_t>(ceil(mass * mass));
+size_t n = 100;// static_cast<size_t>(ceil(mass * mass));
 
-float emitter_radius = 1;
-float receiver_radius = 1;// mass;
+double receiver_radius = 1e10;// 3e10;// mass;
+
+double emitter_radius = 100;// receiver_radius;
+
+
+double receiver_pos = 10*receiver_radius;
 
 vector<vector_3> threeD_oscillators;
 
 
-const float pi = 4.0f * atanf(1.0f);
+const double pi = 4.0f * atanf(1.0f);
 const double c_meters = 299792458;
 
 
 vector<line_segment_3> threeD_line_segments;
 vector<line_segment_3> threeD_line_segments_intersected;
 
-
-vector<line_segment_3> twoD_line_segments;
-vector<line_segment_3> oneD_line_segments;
 
 
 custom_math::vector_3 background_colour(0.0f, 0.0f, 0.0f);
@@ -88,16 +89,16 @@ uv_camera main_camera;
 
 GLint win_id = 0;
 GLint win_x = 800, win_y = 600;
-double camera_w = receiver_radius * 10.0;// 3.086e25f;
+double camera_w = receiver_pos * 10.0;// 3.086e25f;
 
 double camera_fov = 45.0f;
 double camera_x_transform = 0;
 double camera_y_transform = 0;
 double u_spacer = 0.01f;
 double v_spacer = 0.5f*u_spacer;
-double w_spacer = 0.1f;
+double w_spacer = camera_w*0.01f;
 double camera_near = 1.0f;
-double camera_far = camera_w * 10.0;
+double camera_far = camera_w * 1000.0;
 
 bool lmb_down = false;
 bool mmb_down = false;

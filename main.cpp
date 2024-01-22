@@ -25,7 +25,7 @@ const double dimension)
 				line_segment_3 ls_;
 
 				ls_.start = ls.start;
-				ls_.end =  ls.start + (ls.start - ls.end).normalize() * 1e35f;// end;// +(ls.end - ls.start).normalize() * 10.0f;
+				ls_.end = ls.start + (ls.start - ls.end).normalize() * 1e30;// end;// +(ls.end - ls.start).normalize() * 10.0f;
 
 				threeD_line_segments.push_back(ls_);
 			}
@@ -98,11 +98,11 @@ const double dimension)
 
 vector_3 RandomUnitVector(void)
 {
-	float z = static_cast<float>((rand() % 256) + 1) / 256.0f * 2.0f - 1.0f;
-	float a = static_cast<float>((rand() % 256) + 1) / 256.0f * 2 * pi;
-	float r = sqrt(1.0f - z * z);
-	float x = r * cos(a);
-	float y = r * sin(a);
+	double z = static_cast<double>((rand() % 256) + 1) / 256.0f * 2.0f - 1.0f;
+	double a = static_cast<double>((rand() % 256) + 1) / 256.0f * 2 * pi;
+	double r = sqrt(1.0f - z * z);
+	double x = r * cos(a);
+	double y = r * sin(a);
 	return vector_3(x, y, z).normalize();
 }
 
@@ -151,48 +151,49 @@ int main(int argc, char **argv)
 		threeD_oscillators.push_back(rv);
 	}
 
-	for (int g = 0; g < 100; g++)
-	{
-		for (size_t i = 0; i < n; i++)
-		{
-			for (size_t j = 0; j < n; j++)
-			{
-				if (i == j)
-					continue;
+	//for (int g = 0; g < 100; g++)
+	//{
+	//	for (size_t i = 0; i < n; i++)
+	//	{
+	//		for (size_t j = 0; j < n; j++)
+	//		{
+	//			if (i == j)
+	//				continue;
 
-				vector_3 accel(0, 0, 0);
+	//			vector_3 accel(0, 0, 0);
 
-				vector_3 grav_dir = threeD_oscillators[i] - threeD_oscillators[j];
-				const float d = static_cast<float>(grav_dir.length());
+	//			vector_3 grav_dir = threeD_oscillators[i] - threeD_oscillators[j];
+	//			const float d = static_cast<float>(grav_dir.length());
 
-				accel = grav_dir / (d * d);
+	//			accel = grav_dir / (d * d);
 
-				threeD_oscillators[i] += accel * 0.0001f;
-			}
+	//			threeD_oscillators[i] += accel * 0.0001f;
+	//		}
 
-			threeD_oscillators[i].normalize();
-			threeD_oscillators[i] *= emitter_radius;
-		}
-	}
+	//		threeD_oscillators[i].normalize();
+	//		threeD_oscillators[i] *= emitter_radius;
+	//	}
+	//}
 
 	// move along arc to disk formation
 	for (size_t i = 0; i < threeD_oscillators.size(); i++)
 	{
-		double x = threeD_oscillators[i].x;
-		double y = threeD_oscillators[i].y;
-		double z = threeD_oscillators[i].z;
+		double r = threeD_oscillators[i].length();
 
 		vector_3 ring;
 
-		ring.x = x;
+		ring.x = threeD_oscillators[i].x;
 		ring.y = 0;
-		ring.z = z;
+		ring.z = threeD_oscillators[i].z;
 
 		ring.normalize();
+		ring *= r;
 
 		double disk_like = 3 - dimension; // where dimension is between 3.0 and 2.0
 
-		threeD_oscillators[i] = slerp(threeD_oscillators[i], ring, disk_like);
+		vector_3 s = slerp(threeD_oscillators[i], ring, disk_like);
+
+		threeD_oscillators[i] = s;
 	}
 
 
@@ -200,7 +201,7 @@ int main(int argc, char **argv)
 
 
 
-	get_line_segments(vector_3(10.0, 0, 0), receiver_radius, dimension);
+	get_line_segments(vector_3(receiver_pos, 0, 0), receiver_radius, dimension);
 
 	//for(float dist = 2.0; dist <= 100.0f; dist++)
 	//get_line_segments(vector_3(dist, 0, 0), 1.0f, 3.0f);
@@ -319,7 +320,7 @@ void draw_objects(void)
 
 	glBegin(GL_LINES);
 
-	glColor4f(1, 0.5, 0, 0.05f);
+	glColor4f(0, 1, 0, 0.01f);
 
 	for (size_t i = 0; i < threeD_line_segments.size(); i++)
 	{
