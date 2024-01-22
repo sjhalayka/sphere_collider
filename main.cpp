@@ -200,7 +200,7 @@ int main(int argc, char **argv)
 
 
 
-	get_line_segments(vector_3(10.0, 0, 0), 1.0, dimension);
+	get_line_segments(vector_3(10.0, 0, 0), receiver_radius, dimension);
 
 	//for(float dist = 2.0; dist <= 100.0f; dist++)
 	//get_line_segments(vector_3(dist, 0, 0), 1.0f, 3.0f);
