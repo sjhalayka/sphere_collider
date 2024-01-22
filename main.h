@@ -59,9 +59,9 @@ void draw_objects(void);
 
 size_t n = 100;// static_cast<size_t>(ceil(mass * mass));
 
-double receiver_radius = 1e10;// 3e10;// mass;
+double receiver_radius = 3e10;// 3e10;// mass;
 
-double emitter_radius = 100;// receiver_radius;
+double emitter_radius = 1;// receiver_radius;
 
 
 double receiver_pos = 10*receiver_radius;
@@ -97,8 +97,8 @@ double camera_y_transform = 0;
 double u_spacer = 0.01f;
 double v_spacer = 0.5f*u_spacer;
 double w_spacer = camera_w*0.01f;
-double camera_near = 1.0f;
-double camera_far = camera_w * 1000.0;
+double camera_near = receiver_pos / 10.0f;
+double camera_far = receiver_pos * 1000.0;
 
 bool lmb_down = false;
 bool mmb_down = false;

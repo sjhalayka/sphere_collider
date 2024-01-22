@@ -61,7 +61,7 @@ class custom_math::vector_3
 public:
 	double x, y, z;
 
-	vector_3(const double &src_x = 0, const double&src_y = 0, const double&src_z = 0);
+	vector_3(const double &src_x = 0, const double &src_y = 0, const double &src_z = 0);
 	bool operator==(const vector_3 &rhs);
 	bool operator!=(const vector_3 &rhs);
 	void zero(void);
