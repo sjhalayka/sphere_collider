@@ -4,6 +4,7 @@ void get_line_segments(const vector_3 sphere_location,
 const double sphere_radius,
 const double dimension)
 {
+
 	const double disk_like = 3 - dimension;
 
 	if (1)//true == redo_line_segments)
@@ -86,8 +87,11 @@ const double dimension)
 
 	double avg_strength = pow(c_meters, disk_like);
 
-	cout << c_meters << endl;
 	cout << avg_strength * parallelity << endl;
+
+	double a = 1.0 / (receiver_pos);
+
+	cout << a / ((1.0 - parallelity)*G) << endl;
 
 }
 
@@ -127,8 +131,14 @@ vector_3 slerp(vector_3 s0, vector_3 s1, const double t)
 int main(int argc, char **argv)
 {
 	//cout << setprecision(20) << endl;
+	srand(0);
 
-	const double dimension = 2.5;
+	if (dimension < 2)
+		dimension = 2;
+	else if (dimension > 3)
+		dimension = 3;
+
+
 
 	for (size_t i = 0; i < n; i++)
 	{
@@ -178,7 +188,7 @@ int main(int argc, char **argv)
 	// move along arc to disk formation
 	for (size_t i = 0; i < threeD_oscillators.size(); i++)
 	{
-		double r = threeD_oscillators[i].length();
+		const double r = threeD_oscillators[i].length();
 
 		vector_3 ring;
 
@@ -189,7 +199,7 @@ int main(int argc, char **argv)
 		ring.normalize();
 		ring *= r;
 
-		double disk_like = 3 - dimension; // where dimension is between 3.0 and 2.0
+		const double disk_like = 3 - dimension; // where dimension is between 3.0 and 2.0
 
 		vector_3 s = slerp(threeD_oscillators[i], ring, disk_like);
 
@@ -297,17 +307,14 @@ void draw_objects(void)
 	glScaled(1.0 / receiver_radius, 1.0 / receiver_radius, 1.0 / receiver_radius);
 	glPointSize(1.0);
 	glLineWidth(1.0f);
-    
-
+	
 
 	glBegin(GL_POINTS);
 
 	glColor3f(1, 1, 1);
 
 	for (size_t i = 0; i < threeD_oscillators.size(); i++)
-	{
 		glVertex3d(threeD_oscillators[i].x, threeD_oscillators[i].y, threeD_oscillators[i].z);
-	}
 
 	glEnd();
 
@@ -318,24 +325,24 @@ void draw_objects(void)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
+	//glBegin(GL_LINES);
+
+	//glColor4f(0, 1, 0, 0.1f);
+
+	//for (size_t i = 0; i < threeD_line_segments.size(); i++)
+	//{
+	//	if(threeD_line_segments[i].start.z > 0 || threeD_line_segments[i].end.z > 0)
+	//		continue;
+
+	//	glVertex3d(threeD_line_segments[i].start.x, threeD_line_segments[i].start.y, threeD_line_segments[i].start.z);
+	//	glVertex3d(threeD_line_segments[i].end.x, threeD_line_segments[i].end.y, threeD_line_segments[i].end.z);
+	//}
+
+	//glEnd();
+
 	glBegin(GL_LINES);
 
-	glColor4f(0, 1, 0, 0.1f);
-
-	for (size_t i = 0; i < threeD_line_segments.size(); i++)
-	{
-		if(threeD_line_segments[i].start.z > 0 || threeD_line_segments[i].end.z > 0)
-			continue;
-
-		glVertex3d(threeD_line_segments[i].start.x, threeD_line_segments[i].start.y, threeD_line_segments[i].start.z);
-		glVertex3d(threeD_line_segments[i].end.x, threeD_line_segments[i].end.y, threeD_line_segments[i].end.z);
-	}
-
-	glEnd();
-
-	glBegin(GL_LINES);
-
-	glColor4f(0, 0, 1, 1.0f);
+	glColor4f(0, 0, 1, 0.1f);
 
 	for (size_t i = 0; i < threeD_line_segments_intersected.size(); i++)
 	{
@@ -347,11 +354,7 @@ void draw_objects(void)
 
 	glDisable(GL_BLEND);
 
-	//glPushMatrix();
-	//glColor4f(0, 0.5, 1.0, 1.0f);
-	//glTranslatef(emitter_pos, 0.0, 0.0);
-	//glutSolidSphere(1.0, 50, 50);
-	//glPopMatrix();
+
 
 	// If we do draw the axis at all, make sure not to draw its outline.
 	if(true == draw_axis)
@@ -360,21 +363,13 @@ void draw_objects(void)
 
 		glColor3f(1, 0, 0);
 		glVertex3f(0, 0, 0);
-		glVertex3f(1e20f, 0, 0);
+		glVertex3f(static_cast<float>(emitter_radius), 0, 0);
 		glColor3f(0, 1, 0);
 		glVertex3f(0, 0, 0);
-		glVertex3f(0, 1e20f, 0);
+		glVertex3f(0, static_cast<float>(emitter_radius), 0);
 		glColor3f(0, 0, 1);
 		glVertex3f(0, 0, 0);
-		glVertex3f(0, 0, 1e20f);
-
-		//glColor3f(0.5, 0.5, 0.5);
-		//glVertex3f(0, 0, 0);
-		//glVertex3f(-1, 0, 0);
-		//glVertex3f(0, 0, 0);
-		//glVertex3f(0, -1, 0);
-		//glVertex3f(0, 0, 0);
-		//glVertex3f(0, 0, -1);
+		glVertex3f(0, 0, static_cast<float>(emitter_radius));
 
 		glEnd();
 	}

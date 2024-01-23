@@ -59,10 +59,14 @@ void draw_objects(void);
 
 size_t n = 1000;// static_cast<size_t>(ceil(mass * mass));
 
-double receiver_pos = 3e20;// 10 * receiver_radius;
-double receiver_radius = receiver_pos / 10.0;// 3e10;// mass;
+const double receiver_pos = 3e20;// 10 kiloparsecs
+const double receiver_radius = receiver_pos / 10.0;
 
-double emitter_radius = 1;// receiver_radius;
+const double emitter_radius = 1.0;// receiver_radius;// receiver_radius;
+    
+double dimension = 3.0;
+
+const double G = 6.67430e-11;
 
 
 vector<vector_3> threeD_oscillators;
