@@ -73,8 +73,8 @@ const double dimension)
 	{
 		for (size_t j = 0; j < vectors.size(); j++)
 		{
-			//if (i == j)
-			//	continue;
+			if (i == j)
+				continue;
 
 			const double d = vectors[i].dot(vectors[j]);
 
@@ -85,19 +85,19 @@ const double dimension)
 
 	parallelity /= count;
 
-	//parallelity += 1.0;
-	//parallelity /= 2.0;
-
 	parallelity = abs(parallelity);
 		
 	double avg_strength = pow(c_meters, disk_like);
 
-	double a = 1.0 / (receiver_pos*receiver_pos);
+	double a =  1.0 / (receiver_pos*receiver_pos);
 	// static_cast<double>(threeD_line_segments_intersected.size()) / static_cast<double>(threeD_line_segments.size()) 
 
 	double g = parallelity;// / (pi * receiver_pos * receiver_pos);
 
+	cout << g << endl;
+	cout << a << endl;
 	cout << g / a << endl;
+	cout << endl;
 }
 
 
@@ -216,10 +216,10 @@ int main(int argc, char **argv)
 
 
 
-//	get_line_segments(vector_3(receiver_pos, 0, 0), receiver_radius, dimension);
+	get_line_segments(vector_3(receiver_pos, 0, 0), receiver_radius, dimension);
 
-	for(double dist = receiver_pos; dist <= receiver_pos*100.0f; dist += receiver_pos)
-		get_line_segments(vector_3(dist, 0, 0), receiver_radius, dimension);
+//	for(double dist = receiver_pos; dist <= receiver_pos*100.0f; dist += receiver_pos)
+//		get_line_segments(vector_3(dist, 0, 0), receiver_radius, dimension);
 
 
 	glutInit(&argc, argv);
