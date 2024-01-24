@@ -57,12 +57,12 @@ void draw_objects(void);
 
 
 
-size_t n = 1000;// static_cast<size_t>(ceil(mass * mass));
+size_t n = 1000;
 
 const double receiver_pos = 3e20;// 10 kiloparsecs
 const double receiver_radius = receiver_pos / 10.0;
 
-const double emitter_radius = 1.0;// receiver_radius;// receiver_radius;
+const double emitter_radius = 1.0;
     
 double dimension = 3.0;
 
@@ -92,7 +92,7 @@ uv_camera main_camera;
 
 GLint win_id = 0;
 GLint win_x = 800, win_y = 600;
-double camera_w = 10.0;// receiver_pos * 10.0;// 3.086e25f;
+double camera_w = 10.0;
 
 double camera_fov = 45.0f;
 double camera_x_transform = 0;
@@ -100,7 +100,7 @@ double camera_y_transform = 0;
 double u_spacer = 0.01f;
 double v_spacer = 0.5f*u_spacer;
 double w_spacer = camera_w*0.01f;
-double camera_near = 1.0f;// receiver_pos / 10.0f;
+double camera_near = 1.0f;
 double camera_far = 10000.0;
 
 bool lmb_down = false;
