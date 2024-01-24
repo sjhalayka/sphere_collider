@@ -57,7 +57,7 @@ void draw_objects(void);
 
 
 
-size_t n = 5000;
+size_t n = 10000;
 
 const double receiver_pos = 3e20;// 10 kiloparsecs
 const double receiver_radius = receiver_pos / 10.0;
