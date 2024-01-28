@@ -69,13 +69,10 @@ const double dimension)
 	double parallelity = 0;
 	size_t count = 0;
 
-	for (size_t i = 0; i < vectors.size(); i++)
+	for (size_t i = 0; i < vectors.size() - 1; i++)
 	{
-		for (size_t j = 0; j < vectors.size(); j++)
+		for (size_t j = (i + 1); j < vectors.size(); j++)
 		{
-			//if (i == j)
-			//	continue;
-
 			const double d = vectors[i].dot(vectors[j]);
 
 			parallelity += d;
@@ -83,10 +80,14 @@ const double dimension)
 		}
 	}
 
+//	cout << count << " " << vectors.size() * (vectors.size() - 1) / 2.0  << endl;
+
 	parallelity /= count;
 
 	parallelity = abs(parallelity);
-		
+
+
+
 	double avg_strength = pow(c_meters, disk_like);
 
 	double a =  1.0 / pow(sphere_location.x, 2.0);
@@ -94,10 +95,10 @@ const double dimension)
 	//
 	double g = (1.0 - parallelity);// / pow(sphere_location.x, 2.0);
 
-	cout << g << endl;
-	cout << a << endl;
-	cout << g / a << endl;
-	cout << endl;
+	//cout << g << endl;
+	//cout << a << endl;
+	//cout << g / a << endl;
+	//cout << endl;
 }
 
 
@@ -216,10 +217,10 @@ int main(int argc, char **argv)
 
 
 
-//	get_line_segments(vector_3(receiver_pos, 0, 0), receiver_radius, dimension);
+ 	get_line_segments(vector_3(receiver_pos, 0, 0), receiver_radius, dimension);
 
-	for(double dist = receiver_pos; dist <= receiver_pos*1000.0; dist += receiver_pos)
-		get_line_segments(vector_3(dist, 0, 0), receiver_radius, dimension);
+	//for(double dist = receiver_pos; dist <= receiver_pos*1000.0; dist += receiver_pos)
+	//	get_line_segments(vector_3(dist, 0, 0), receiver_radius, dimension);
 
 
 	glutInit(&argc, argv);
