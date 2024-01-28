@@ -80,7 +80,7 @@ const double dimension)
 		}
 	}
 
-//	cout << count << " " << vectors.size() * (vectors.size() - 1) / 2.0  << endl;
+	cout << count << " " << vectors.size() * (vectors.size() - 1) / 2.0  << endl;
 
 	parallelity /= count;
 
@@ -136,7 +136,7 @@ vector_3 slerp(vector_3 s0, vector_3 s1, const double t)
 
 int main(int argc, char **argv)
 {
-	//cout << setprecision(20) << endl;
+	cout << setprecision(20) << endl;
 	srand(0);
 
 	if (dimension < 2)
